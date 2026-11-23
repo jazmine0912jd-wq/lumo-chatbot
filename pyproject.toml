@@ -1,0 +1,18 @@
+[project]
+name = "lumo-chatbot"
+version = "0.1.0"
+description = "Anonymer Spielerschutz-Chatbot (Mistral API, Python)"
+requires-python = ">=3.10"
+dependencies = [
+    "mistralai>=1.0.0,<2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+lumo = "lumo.__main__:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
