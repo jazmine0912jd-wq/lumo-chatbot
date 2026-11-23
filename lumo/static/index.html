@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lumo – anonymer Spielerschutz-Chat</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:720px;margin:2rem auto;padding:0 1rem;background:#f6f7fb;color:#1c1e26}
+h1{color:#3b4bd8}a{color:#3b4bd8}
+.box{background:#fff;border:1px solid #e3e5ee;border-radius:12px;padding:1rem;margin:1rem 0}
+#log{display:flex;flex-direction:column;gap:.5rem;min-height:200px;max-height:50vh;overflow-y:auto}
+.msg{padding:.5rem .8rem;border-radius:10px;max-width:85%;white-space:pre-wrap}
+.user{align-self:flex-end;background:#dfe4ff}.bot{align-self:flex-start;background:#eef0f6}
+#bar{display:flex;gap:.5rem;margin-top:.5rem}
+input[type=text]{flex:1;padding:.6rem;border:1px solid #ccc;border-radius:8px}
+button{padding:.6rem 1rem;border:0;border-radius:8px;background:#3b4bd8;color:#fff;cursor:pointer}
+.nav a{margin-right:1rem}
+</style>
+</head>
+<body>
+<h1>Lumo</h1>
+<p class="nav"><a href="/selbsttest">Anonymer Selbsttest</a><a href="/tools">Spielerschutz-Tools</a><a href="/beratung">Beratungsstellen</a></p>
+<div class="box">
+  <div id="log"><div class="msg bot">Hallo! Ich bin Lumo. Du kannst hier anonym über alles rund um Glücksspiel sprechen. Was beschäftigt dich?</div></div>
+  <div id="bar"><input id="text" type="text" placeholder="Schreib Lumo …" autofocus><button id="send">Senden</button></div>
+</div>
+<p><small>Anonym: Dieses Gespräch wird nur im Arbeitsspeicher gehalten und nicht protokolliert.</small></p>
+<script>
+const log = document.getElementById("log");
+const text = document.getElementById("text");
+function add(role, content) {
+  const div = document.createElement("div");
+  div.className = "msg " + role;
+  div.textContent = content;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+async function send() {
+  const message = text.value.trim();
+  if (!message) return;
+  text.value = "";
+  add("user", message);
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({message: message})
+    });
+    const data = await res.json();
+    add("bot", data.reply);
+  } catch (e) {
+    add("bot", "Da ist gerade etwas schiefgelaufen. Bitte versuche es erneut.");
+  }
+}
+document.getElementById("send").addEventListener("click", send);
+text.addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
+</script>
+</body>
+</html>

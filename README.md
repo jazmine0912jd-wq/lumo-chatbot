@@ -18,10 +18,18 @@
 ```bash
 pip install -r requirements.txt
 cp .env.example .env   # API-Key eintragen
-python -m lumo
+python -m lumo          # Konsolen-Chat
 ```
 
-## Nutzung
+## Web-App
+
+```bash
+python -m lumo.web      # startet lokal auf http://127.0.0.1:8000
+```
+
+Die Web-App läuft ausschließlich auf `127.0.0.1` (Loopback). Seiten: Chat (`/`), anonymer Selbsttest (`/selbsttest`), Spielerschutz-Tools (`/tools`), Beratungsstellen (`/beratung`). Sitzungen liegen nur im Arbeitsspeicher (Cookie `lumo_session`), nichts wird protokolliert oder gespeichert.
+
+## Nutzung (Konsole)
 
 Einfach frei schreiben. Befehle in der Konsole:
 
